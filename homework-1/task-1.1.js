@@ -1,24 +1,12 @@
-import readline from 'readline';
+import { Transform } from 'stream';
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
+const reverseStringStream = new Transform({
+  transform(chunk, encoding, next) {
+    const inputString = chunk.toString();
+    const reversedString = [...inputString].reverse().join('');
+    this.push(`${reversedString}\n\r`);
+    next();
+  },
 });
 
-const border = '=============';
-
-const prompt = `
-${border}
-write here your string
-your input: `;
-
-const reverseInput = () => rl.question(prompt, (input) => {
-  const reversedInput = [...input].reverse().join('');
-
-  console.log(`here is the reversed string: ${reversedInput}`);
-  console.log(border);
-
-  reverseInput();
-});
-
-reverseInput();
+process.stdin.pipe(reverseStringStream).pipe(process.stdout);
