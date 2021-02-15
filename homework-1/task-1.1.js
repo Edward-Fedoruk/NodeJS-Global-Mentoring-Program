@@ -9,4 +9,6 @@ const reverseStringStream = new Transform({
   },
 });
 
-process.stdin.pipe(reverseStringStream).pipe(process.stdout);
+process.stdin
+  .pipe(reverseStringStream)
+  .pipe(process.stdout);
