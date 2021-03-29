@@ -7,10 +7,12 @@ class Database {
       database: process.env.DB_NAME,
       dialect: 'postgres',
       username: process.env.DB_USER,
+      logging: process.env.NODE_ENV === 'dev',
       password: process.env.DB_PASS,
       models: [path.join(__dirname, '../models/')], // or [Player, Team],
     });
-    sequelize.authenticate();
+
+    await sequelize.authenticate();
     await sequelize.sync();
     return sequelize;
   }
