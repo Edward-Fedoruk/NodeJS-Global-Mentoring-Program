@@ -29,8 +29,8 @@ class UserService implements IUserService {
     return this.userRepository.update(user);
   }
 
-  getSuggested(limit: string, substring: string): Promise<IUser[]> {
-    return this.getSuggested(limit, substring);
+  getSuggested(limit = '', substring = ''): Promise<IUser[]> {
+    return this.userRepository.getSuggested(limit, substring);
   }
 }
 

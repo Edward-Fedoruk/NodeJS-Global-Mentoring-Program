@@ -6,6 +6,9 @@ import { inject } from 'inversify';
 import { Request, Response } from 'express';
 import IUserService from '../services/IUserService';
 import TYPES from '../types';
+import validate from '../validate';
+import userSchema from '../schemas/user';
+import paginationSchema from '../schemas/pagination';
 
 @controller('/user')
 class UserController extends BaseHttpController {
@@ -27,7 +30,20 @@ class UserController extends BaseHttpController {
     }
   }
 
-  @httpPost('/')
+  @httpGet('/', validate(paginationSchema, 'query'))
+  async getSuggested(req: Request, res: Response) {
+    const limit = req.query.limit as string | undefined;
+    const substring = req.query.substring as string | undefined;
+
+    try {
+      const users = await this.userService.getSuggested(limit, substring);
+      res.status(200).json(users);
+    } catch (err) {
+      res.status(404).send('users was not found');
+    }
+  }
+
+  @httpPost('/', validate(userSchema.required, 'body'))
   async create(req: Request, res: Response) {
     try {
       const user = await this.userService.create(req.body);
@@ -49,7 +65,7 @@ class UserController extends BaseHttpController {
     }
   }
 
-  @httpPatch('/:id')
+  @httpPatch('/:id', validate(userSchema.optional, 'body'))
   async update(req: Request, res: Response) {
     try {
       const user = await this.userService.update(req.body);

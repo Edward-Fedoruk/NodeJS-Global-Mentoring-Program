@@ -53,10 +53,12 @@ class UserRepository implements IUserRepository {
     return this.formatDTO(userRow);
   }
 
-  async getSuggested(limit: number, substring: string): Promise<IUser[]> {
+  async getSuggested(limit: string, substring: string): Promise<IUser[]> {
+    const parsedLimit = parseInt(limit, 10);
+
     const userRows = await UserModel.findAll({
-      where: { login: { [Op.like]: `${substring}` } },
-      limit,
+      where: { login: { [Op.like]: `%${substring}%` } },
+      limit: Number.isNaN(parsedLimit) ? undefined : parsedLimit,
     });
 
     return userRows.map(this.formatDTO);

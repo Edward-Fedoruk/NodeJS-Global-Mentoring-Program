@@ -6,7 +6,7 @@ interface IUserService {
   create(user: IUserDTO): Promise<IUser>;
   delete(id: string): Promise<IUser>;
   update(user: IUser): Promise<IUser>;
-  getSuggested(limit: string, substring: string): Promise<IUser[]>
+  getSuggested(limit?: string, substring?: string): Promise<IUser[]>
 }
 
 export default IUserService;
