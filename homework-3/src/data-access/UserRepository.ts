@@ -59,6 +59,7 @@ class UserRepository implements IUserRepository {
     const userRows = await UserModel.findAll({
       where: { login: { [Op.like]: `%${substring}%` } },
       limit: Number.isNaN(parsedLimit) ? undefined : parsedLimit,
+      order: ['login', 'ASC'],
     });
 
     return userRows.map(this.formatDTO);
