@@ -2,14 +2,13 @@ import {
   Table,
   Column,
   Model,
-  Unique,
   AllowNull,
+  Default,
 } from 'sequelize-typescript';
 
 @Table
 class Users extends Model {
   @AllowNull(false)
-  @Unique
   @Column
   login: string
 
@@ -20,6 +19,11 @@ class Users extends Model {
   @AllowNull(false)
   @Column({ validate: { min: 1 } })
   age: number
+
+  @Default(false)
+  @AllowNull(false)
+  @Column
+  isDeleted: boolean
 }
 
 export default Users;

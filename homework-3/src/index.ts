@@ -1,9 +1,3 @@
-import Data from './config/Database';
+import App from './config/App';
 
-const sequelize = new Sequelize({
-  database: 'user',
-  dialect: 'postgres',
-  username: 'postgres',
-  password: 'postgres',
-});
-sequelize.addModels([Users]);
+App.boot();

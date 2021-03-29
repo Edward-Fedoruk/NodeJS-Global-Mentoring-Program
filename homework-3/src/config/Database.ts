@@ -1,33 +1,17 @@
 import { Sequelize } from 'sequelize-typescript';
-import IDatabase from './IDatabase';
-import { IEnvironment } from './IEnvironment';
+import path from 'path';
 
-class Database implements IDatabase {
-  private envVariables: IEnvironment
-
-  private sequelize: Sequelize;
-
-  constructor(envVariables: IEnvironment) {
-    this.envVariables = envVariables;
-  }
-
-  init(): Sequelize {
-    const {
-      dbName,
-      dbPassword,
-      dbUsername,
-    } = this.envVariables.getVariables();
-
-    if (!sequelize) {
-      this.sequelize = new Sequelize({
-        database: dbName,
-        dialect: 'postgres',
-        username: dbUsername,
-        password: dbPassword,
-        models: [`${__dirname}../models/`], // or [Player, Team],
-      });
-    }
-
+class Database {
+  static async init(): Promise<Sequelize> {
+    const sequelize = new Sequelize({
+      database: process.env.DB_NAME,
+      dialect: 'postgres',
+      username: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      models: [path.join(__dirname, '../models/')], // or [Player, Team],
+    });
+    sequelize.authenticate();
+    await sequelize.sync();
     return sequelize;
   }
 }
