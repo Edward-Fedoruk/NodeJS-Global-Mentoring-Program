@@ -67,8 +67,10 @@ class UserController extends BaseHttpController {
 
   @httpPatch('/:id', validate(userSchema.optional, 'body'))
   async update(req: Request, res: Response) {
+    const { id: userId } = req.params;
+
     try {
-      const user = await this.userService.update(req.body);
+      const user = await this.userService.update(userId, req.body);
       res.status(200).json(user);
     } catch (err) {
       res.status(404).send('user was not deleted');

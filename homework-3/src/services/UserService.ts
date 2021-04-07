@@ -13,23 +13,23 @@ class UserService implements IUserService {
     this.userRepository = userRepository;
   }
 
-  get(id: string): Promise<IUser> {
+  get(id: string): Promise<IUserDTO> {
     return this.userRepository.get(id);
   }
 
-  create(user: IUserDTO): Promise<IUser> {
+  create(user: IUser): Promise<IUserDTO> {
     return this.userRepository.create(user);
   }
 
-  delete(id: string): Promise<IUser> {
+  delete(id: string): Promise<IUserDTO> {
     return this.userRepository.delete(id);
   }
 
-  update(id: string, user: IUser): Promise<IUser> {
+  update(id: string, user: IUser): Promise<IUserDTO> {
     return this.userRepository.update(id, user);
   }
 
-  getSuggested(limit = '', substring = ''): Promise<IUser[]> {
+  getSuggested(limit = '', substring = ''): Promise<IUserDTO[]> {
     return this.userRepository.getSuggested(limit, substring);
   }
 }

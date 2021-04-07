@@ -7,7 +7,7 @@ import UserModel from '../models/User.model';
 
 @injectable()
 class UserRepository implements IUserRepository {
-  private formatDTO(userRow: UserModel) {
+  private formatDTO(userRow: UserModel): IUserDTO {
     return {
       id: `${userRow.id}`,
       login: userRow.login,
@@ -17,7 +17,7 @@ class UserRepository implements IUserRepository {
     };
   }
 
-  async get(id: string): Promise<IUser> {
+  async get(id: string): Promise<IUserDTO> {
     const userRow = await UserModel.findByPk(id);
 
     if (userRow) {
@@ -27,13 +27,13 @@ class UserRepository implements IUserRepository {
     throw Error(`can't get user with id: ${id}`);
   }
 
-  async create(user: IUserDTO): Promise<IUser> {
+  async create(user: IUserDTO): Promise<IUserDTO> {
     const userRow = await UserModel.create(user);
 
     return this.formatDTO(userRow);
   }
 
-  async delete(id: string): Promise<IUser> {
+  async delete(id: string): Promise<IUserDTO> {
     const [, [userRow]] = await UserModel.update(
       { isDeleted: true },
       { where: { id }, returning: true },
@@ -42,7 +42,7 @@ class UserRepository implements IUserRepository {
     return this.formatDTO(userRow);
   }
 
-  async update(id: string, user: IUser): Promise<IUser> {
+  async update(id: string, user: IUser): Promise<IUserDTO> {
     const { ...updateInfo } = user;
 
     const [, [userRow]] = await UserModel.update(
@@ -53,7 +53,7 @@ class UserRepository implements IUserRepository {
     return this.formatDTO(userRow);
   }
 
-  async getSuggested(limit: string, substring: string): Promise<IUser[]> {
+  async getSuggested(limit: string, substring: string): Promise<IUserDTO[]> {
     const parsedLimit = parseInt(limit, 10);
 
     const userRows = await UserModel.findAll({
