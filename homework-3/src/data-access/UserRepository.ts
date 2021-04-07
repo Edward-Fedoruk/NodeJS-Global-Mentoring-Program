@@ -42,8 +42,8 @@ class UserRepository implements IUserRepository {
     return this.formatDTO(userRow);
   }
 
-  async update(user: IUser): Promise<IUser> {
-    const { id, ...updateInfo } = user;
+  async update(id: string, user: IUser): Promise<IUser> {
+    const { ...updateInfo } = user;
 
     const [, [userRow]] = await UserModel.update(
       { ...updateInfo },

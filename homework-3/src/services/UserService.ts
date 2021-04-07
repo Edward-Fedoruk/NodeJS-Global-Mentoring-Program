@@ -25,8 +25,8 @@ class UserService implements IUserService {
     return this.userRepository.delete(id);
   }
 
-  update(user: IUser): Promise<IUser> {
-    return this.userRepository.update(user);
+  update(id: string, user: IUser): Promise<IUser> {
+    return this.userRepository.update(id, user);
   }
 
   getSuggested(limit = '', substring = ''): Promise<IUser[]> {
