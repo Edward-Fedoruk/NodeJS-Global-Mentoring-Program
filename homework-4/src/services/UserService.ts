@@ -1,5 +1,5 @@
 import { inject, injectable } from 'inversify';
-import TYPES from '../types';
+import TYPES from '../config/types';
 import IUser from '../entities/IUser';
 import IUserDTO from '../entities/IUserDTO';
 import IUserService from './IUserService';

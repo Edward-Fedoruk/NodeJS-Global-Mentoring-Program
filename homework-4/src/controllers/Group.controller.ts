@@ -5,7 +5,7 @@ import {
 import { inject } from 'inversify';
 import { Request, Response } from 'express';
 import IUserService from '../services/IUserService';
-import TYPES from '../types';
+import TYPES from '../config/types';
 import validate from '../validate';
 import userSchema from '../schemas/user';
 import paginationSchema from '../schemas/pagination';
