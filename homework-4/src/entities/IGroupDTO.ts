@@ -1,8 +1,7 @@
-type Permission = 'READ' | 'WRITE' | 'DELETE' | 'SHARE' | 'UPLOAD_FILES';
-
 type Group = {
+  id: string;
   name: string;
-  permissions: Array<Permission>;
+  permissions: string[];
 }
 
 export default Group;

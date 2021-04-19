@@ -1,7 +1,7 @@
 import IGroup from '../entities/IGroup';
 import IGroupDTO from '../entities/IGroupDTO';
 
-interface IGroupRepository {
+interface IGroupService {
   get(id: string): Promise<IGroupDTO>;
   getAll(): Promise<IGroupDTO[]>
   create(group: IGroup): Promise<IGroupDTO>;
@@ -10,4 +10,4 @@ interface IGroupRepository {
   update(id: string, user: IGroup): Promise<IGroupDTO>;
 }
 
-export default IGroupRepository;
+export default IGroupService;

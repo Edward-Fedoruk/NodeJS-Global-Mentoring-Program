@@ -13,10 +13,10 @@ import UserGroup from './UserGroup.model';
 class Group extends Model {
   @AllowNull(false)
   @Column
-  name: string
+  groupName: string
 
   @AllowNull(false)
-  @Column(DataType.ENUM('READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES'))
+  @Column(DataType.ARRAY(DataType.ENUM('READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES')))
   permissions: string[]
 
   @BelongsToMany(() => User, () => UserGroup)

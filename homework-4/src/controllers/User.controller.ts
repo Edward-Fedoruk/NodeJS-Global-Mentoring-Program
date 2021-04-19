@@ -7,8 +7,8 @@ import { Request, Response } from 'express';
 import IUserService from '../services/IUserService';
 import TYPES from '../config/types';
 import validate from '../validate';
-import userSchema from '../schemas/user';
-import paginationSchema from '../schemas/pagination';
+import userSchema from '../validation-schemas/user';
+import paginationSchema from '../validation-schemas/pagination';
 
 @controller('/user')
 class UserController extends BaseHttpController {

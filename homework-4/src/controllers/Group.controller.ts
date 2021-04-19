@@ -4,76 +4,84 @@ import {
 } from 'inversify-express-utils';
 import { inject } from 'inversify';
 import { Request, Response } from 'express';
-import IUserService from '../services/IUserService';
-import TYPES from '../config/types';
+import IGroupService from '../services/IGroupService';
+import groupSchema from '../validation-schemas/group';
 import validate from '../validate';
-import userSchema from '../schemas/user';
-import paginationSchema from '../schemas/pagination';
+import TYPES from '../config/types';
 
-@controller('/user')
+@controller('/group')
 class GroupController extends BaseHttpController {
-  private userService: IUserService
+  private groupService: IGroupService
 
-  constructor(@inject(TYPES.UserService) userService: IUserService) {
+  constructor(@inject(TYPES.GroupService) groupService: IGroupService) {
     super();
-    this.userService = userService;
+    this.groupService = groupService;
   }
 
   @httpGet('/:id')
   async get(req: Request, res: Response) {
-    const { id: userId } = req.params;
+    const { id } = req.params;
     try {
-      const user = await this.userService.get(userId);
-      res.status(200).json(user);
+      const group = await this.groupService.get(id);
+      res.json(group);
     } catch (err) {
-      res.status(404).send('user not found');
+      res.status(404).send('group not found');
     }
   }
 
-  @httpGet('/', validate(paginationSchema, 'query'))
-  async getSuggested(req: Request, res: Response) {
-    const limit = req.query.limit as string | undefined;
-    const substring = req.query.substring as string | undefined;
-
+  @httpGet('/')
+  async getAll(req: Request, res: Response) {
     try {
-      const users = await this.userService.getSuggested(limit, substring);
-      res.status(200).json(users);
+      const group = await this.groupService.getAll();
+      res.json(group);
     } catch (err) {
-      res.status(404).send('users was not found');
+      res.status(404).send('groups not found');
     }
   }
 
-  @httpPost('/', validate(userSchema.required, 'body'))
+  @httpPost('/', validate(groupSchema, 'body'))
   async create(req: Request, res: Response) {
     try {
-      const user = await this.userService.create(req.body);
-      res.status(201).json(user);
+      const group = await this.groupService.create(req.body);
+      res.json(group);
     } catch (err) {
-      res.status(404).send('user was not created');
+      res.status(404).send('group was not created');
+    }
+  }
+
+  @httpPost('/:id')
+  async addUsersToGroup(req: Request, res: Response) {
+    const { id } = req.params;
+    const { userIds } = req.body;
+
+    try {
+      await this.groupService.addToGroup(id, userIds);
+    } catch (err) {
+      res.status(400).send('could not add user');
     }
   }
 
   @httpDelete('/:id')
   async delete(req: Request, res: Response) {
-    const { id: userId } = req.params;
+    const { id } = req.params;
 
     try {
-      const user = await this.userService.delete(userId);
-      res.status(200).json(user);
+      await this.groupService.delete(id);
+      res.status(200);
     } catch (err) {
-      res.status(404).send('user was not deleted');
+      res.status(400).send('group was not deleted');
     }
   }
 
-  @httpPatch('/:id', validate(userSchema.optional, 'body'))
+  @httpPatch('/:id')
   async update(req: Request, res: Response) {
-    const { id: userId } = req.params;
+    const { id } = req.params;
 
     try {
-      const user = await this.userService.update(userId, req.body);
-      res.status(200).json(user);
+      const group = await this.groupService.update(id, req.body);
+      res.json(group);
     } catch (err) {
-      res.status(404).send('user was not deleted');
+      res.status(400).send('group was not updated');
     }
   }
 }
