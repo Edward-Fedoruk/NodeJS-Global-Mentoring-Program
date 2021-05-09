@@ -6,20 +6,28 @@ import { inject } from 'inversify';
 import { Request, Response } from 'express';
 import IUserService from '../services/IUserService';
 import TYPES from '../config/types';
-import validate from '../validate';
+import validate from '../middlewares/validate';
 import userSchema from '../validation-schemas/user';
 import paginationSchema from '../validation-schemas/pagination';
+import auth from '../middlewares/auth';
+import IAuthService from '../services/IAuthService';
 
 @controller('/user')
 class UserController extends BaseHttpController {
   private userService: IUserService
 
-  constructor(@inject(TYPES.UserService) userService: IUserService) {
+  private authService: IAuthService
+
+  constructor(
+    @inject(TYPES.UserService) userService: IUserService,
+    @inject(TYPES.AuthService) authService: IAuthService,
+  ) {
     super();
     this.userService = userService;
+    this.authService = authService;
   }
 
-  @httpGet('/:id')
+  @httpGet('/:id', auth)
   async get(req: Request, res: Response) {
     const { id: userId } = req.params;
     try {
@@ -30,7 +38,7 @@ class UserController extends BaseHttpController {
     }
   }
 
-  @httpGet('/', validate(paginationSchema, 'query'))
+  @httpGet('/', validate(paginationSchema, 'query'), auth)
   async getSuggested(req: Request, res: Response) {
     const limit = req.query.limit as string | undefined;
     const substring = req.query.substring as string | undefined;
@@ -46,14 +54,15 @@ class UserController extends BaseHttpController {
   @httpPost('/', validate(userSchema.required, 'body'))
   async create(req: Request, res: Response) {
     try {
+      const tokens = this.authService.authenticate(req.body.login);
       const user = await this.userService.create(req.body);
-      res.status(201).json(user);
+      res.status(201).json({ tokens, user });
     } catch (err) {
       res.status(404).send('user was not created');
     }
   }
 
-  @httpDelete('/:id')
+  @httpDelete('/:id', auth)
   async delete(req: Request, res: Response) {
     const { id: userId } = req.params;
 
@@ -65,7 +74,7 @@ class UserController extends BaseHttpController {
     }
   }
 
-  @httpPatch('/:id', validate(userSchema.optional, 'body'))
+  @httpPatch('/:id', validate(userSchema.optional, 'body'), auth)
   async update(req: Request, res: Response) {
     const { id: userId } = req.params;
 

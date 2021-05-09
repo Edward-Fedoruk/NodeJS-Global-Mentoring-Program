@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 import {
   BaseHttpController, controller, httpDelete, httpGet, httpPatch, httpPost,
 } from 'inversify-express-utils';
@@ -6,10 +5,11 @@ import { inject } from 'inversify';
 import { Request, Response } from 'express';
 import IGroupService from '../services/IGroupService';
 import groupSchema from '../validation-schemas/group';
-import validate from '../validate';
+import validate from '../middlewares/validate';
 import TYPES from '../config/types';
+import auth from '../middlewares/auth';
 
-@controller('/group')
+@controller('/group', auth)
 class GroupController extends BaseHttpController {
   private groupService: IGroupService
 
@@ -19,7 +19,7 @@ class GroupController extends BaseHttpController {
   }
 
   @httpGet('/:id')
-  async get(req: Request, res: Response) {
+  async get(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     try {
       const group = await this.groupService.get(id);
@@ -30,7 +30,7 @@ class GroupController extends BaseHttpController {
   }
 
   @httpGet('/')
-  async getAll(req: Request, res: Response) {
+  async getAll(req: Request, res: Response): Promise<void> {
     try {
       const group = await this.groupService.getAll();
       res.json(group);
@@ -40,7 +40,7 @@ class GroupController extends BaseHttpController {
   }
 
   @httpPost('/', validate(groupSchema, 'body'))
-  async create(req: Request, res: Response) {
+  async create(req: Request, res: Response): Promise<void> {
     try {
       const group = await this.groupService.create(req.body);
       res.json(group);
@@ -50,7 +50,7 @@ class GroupController extends BaseHttpController {
   }
 
   @httpPost('/:id')
-  async addUsersToGroup(req: Request, res: Response) {
+  async addUsersToGroup(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
     const { userIds } = req.body;
 
@@ -62,7 +62,7 @@ class GroupController extends BaseHttpController {
   }
 
   @httpDelete('/:id')
-  async delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
     try {
@@ -74,7 +74,7 @@ class GroupController extends BaseHttpController {
   }
 
   @httpPatch('/:id')
-  async update(req: Request, res: Response) {
+  async update(req: Request, res: Response): Promise<void> {
     const { id } = req.params;
 
     try {
