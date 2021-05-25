@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES6",                          
+    "module": "CommonJS",                    
+    "lib": ["ES6"],                     
+    "allowJs": true,
+    "outDir": "build",                          
+    "rootDir": "src",
+    "strict": true,         
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "moduleResolution": "Node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
+  },
+}
