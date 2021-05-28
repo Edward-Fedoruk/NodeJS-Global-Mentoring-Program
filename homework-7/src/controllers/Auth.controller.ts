@@ -20,7 +20,7 @@ class AuthController extends BaseHttpController {
   }
 
   @httpPost('/refresh-token')
-  async refresh(req: Request, res: Response): Promise<void> {
+  refresh(req: Request, res: Response): void {
     try {
       const { refreshToken } = req.body;
 
@@ -36,7 +36,7 @@ class AuthController extends BaseHttpController {
   }
 
   @httpPost('/login', validate(authSchema, 'body'))
-  async login(req: Request, res: Response): Promise<void> {
+  login(req: Request, res: Response): void {
     try {
       const tokens = this.authService.authenticate(req.body.login);
       res.json(tokens);

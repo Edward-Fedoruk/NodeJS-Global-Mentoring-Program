@@ -11,6 +11,8 @@ import IGroupRepository from '../data-access/IGroupRepository';
 import GroupRepository from '../data-access/GroupRepository';
 import IAuthService from '../services/IAuthService';
 import AuthService from '../services/AuthService';
+import IEnv from './IEnv';
+import Env from './Env';
 
 import '../controllers/User.controller';
 import '../controllers/Group.controller';
@@ -24,6 +26,7 @@ class Inversify {
     container.bind<IGroupRepository>(TYPES.GroupRepository).to(GroupRepository);
     container.bind<IGroupService>(TYPES.GroupService).to(GroupService);
     container.bind<IAuthService>(TYPES.AuthService).to(AuthService);
+    container.bind<IEnv>(TYPES.AuthService).to(Env);
 
     const server = new InversifyExpressServer(container);
 

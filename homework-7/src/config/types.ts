@@ -6,4 +6,5 @@ export default {
   GroupService: Symbol.for('GroupService'),
   GroupRepository: Symbol.for('GroupRepository'),
   AuthService: Symbol.for('AuthService'),
+  Env: Symbol.for('Env'),
 };

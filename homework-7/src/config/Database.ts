@@ -1,14 +1,17 @@
 import { Sequelize } from 'sequelize-typescript';
 import path from 'path';
+import Env from './Env';
 
 class Database {
   static async init(): Promise<Sequelize> {
+    const env = new Env();
+
     const sequelize = new Sequelize({
-      database: process.env.DB_NAME,
+      database: env.DB_NAME,
       dialect: 'postgres',
-      username: process.env.DB_USER,
+      username: env.DB_USER,
       logging: false,
-      password: process.env.DB_PASS,
+      password: env.DB_PASS,
       models: [path.join(__dirname, '../models/')], // or [Player, Team],
     });
 
